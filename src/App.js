@@ -4,21 +4,25 @@ import { Route, Switch } from "react-router-dom";
 import Home from "./Home";
 import Day from "./Day";
 function App() {
-  const [week, setWeek] = React.useState(["일", "월", "화", "수", "목", "금", "토"]);
-  
-  
+  const week = ["일", "월", "화", "수", "목", "금", "토"];
+  const day = new Date().getDay()
+  const realweek = week.map((v,i) => v=week[(day+i)%7]) // 오늘을 기준으로 요일을 다시 셋팅
+
   return (
   <div className="App">
       <Container>
         <Switch>
           <Route path ="/" exact>
-            <Home week={week}/>
+            <Home week={realweek} />
+            {/* Home에 realweek를 props로 넘겨줌 */}
           </Route>
-          <Route path ="/day/" exact>
-            <Day />
+          {/* /day/뒤에 요일을 붙여주기위해 :week를 붙여줌 */}
+          <Route path ="/day/:week" exact>
+            <Day/>
           </Route>
         </Switch>
       </Container>
+      
   </div>
   );
 }
