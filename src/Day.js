@@ -2,14 +2,36 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loadScoreFB, updateScoreFB } from "./redux/modules/score";
+import { db } from "./firebase";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc
+} from "firebase/firestore";
 
 const Day = (props) => {
   const week_params = useParams();  //페이지 이동할때 넘겨주는 해당 요일을 받아옴
   const circle = [0,1,2,3,4]
   const [number,setNumber] = React.useState(0)  // 초기값을 0으로 줘서 원 색상이 모두 lightgray가 나오게함
   const history = useHistory();
+  // const clickEvent = (number) => {
+  //     setNumber(number + 1)
+  // }
+  const dispatch = useDispatch()
+  // const data = useSelector((state) => state.score.score)
   const clickEvent = (number) => {
-      setNumber(number + 1)
+    setNumber(number+1)
+    // dispatch(updateScoreFB(week_params.week, parseInt(number+1)))
+  }
+  const updateRate = () => {
+    dispatch(updateScoreFB(week_params.week, parseInt(number)))
+    history.goBack()
   }
   // 키보드 숫자 키 눌렀을 때 원 색깔 바뀜
   React.useEffect(()=>{
@@ -34,7 +56,7 @@ const Day = (props) => {
           : (<Circle key={v} onClick={() => clickEvent(i)}></Circle>)
         })}
       </Wrap>
-      <Button onClick={() => history.push(`/`)}>평점 남기기</Button>
+      <Button onClick={() => updateRate()}>평점 남기기</Button>
     </>
   );
 };
